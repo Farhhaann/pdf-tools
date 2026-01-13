@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PDF to Images</title>
+
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    .page-box {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .page-box img {
+      width: 100%;
+      margin-top: 10px;
+      border-radius: 10px;
+    }
+    .page-box a {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <a href="index.html" class="back-link">← Back to Home</a>
+
+  <h1>📄 PDF → Images</h1>
+  <p class="subtitle">Convert PDF pages into downloadable images</p>
+
+  <label for="pdfFile">Select PDF</label>
+  <input type="file" id="pdfFile" accept="application/pdf">
+
+  <div class="buttons">
+    <button onclick="convertPDF()">Convert</button>
+  </div>
+
+  <div id="output"></div>
+
+</div>
+
+<script>
+const pdfjsLib = window['pdfjsLib'];
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+
+async function convertPDF() {
+  const fileInput = document.getElementById("pdfFile");
+  const output = document.getElementById("output");
+  output.innerHTML = "";
+
+  if (!fileInput.files.length) {
+    alert("Please select a PDF file");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = async function () {
+    const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(this.result) }).promise;
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({ scale: 2 });
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      await page.render({ canvasContext: ctx, viewport }).promise;
+
+      const imgData = canvas.toDataURL("image/png");
+
+      const box = document.createElement("div");
+      box.className = "page-box";
+
+      const img = document.createElement("img");
+      img.src = imgData;
+
+      const link = document.createElement("a");
+      link.href = imgData;
+      link.download = page-${i}.png;
+      link.textContent = Download Page ${i};
+
+      box.appendChild(link);
+      box.appendChild(img);
+      output.appendChild(box);
+    }
+  };
+
+  reader.readAsArrayBuffer(fileInput.files[0]);
+}
+</script>
+
+</body>
+</html>
