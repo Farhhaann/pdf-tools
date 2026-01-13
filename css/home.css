@@ -1,0 +1,69 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: linear-gradient(135deg, #f8fafc, #eef2ff);
+  text-align: center;
+  color: #0f172a;
+}
+
+.title {
+  margin-top: 40px;
+  color: #2563eb;
+}
+
+.subtitle {
+  color: #475569;
+  margin-bottom: 30px;
+}
+
+.tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 0 20px 40px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.tool-card {
+  padding: 30px 20px;
+  border-radius: 30px;
+  color: white;
+  text-decoration: none;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tool-card span {
+  font-size: 40px;
+}
+
+.tool-card h3 {
+  margin: 10px 0 5px;
+}
+
+.tool-card p {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.tool-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 25px 45px rgba(0,0,0,0.25);
+}
+
+/* Colors */
+.blue   { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+.green  { background: linear-gradient(135deg, #22c55e, #4ade80); }
+.purple { background: linear-gradient(135deg, #a855f7, #c084fc); }
+.orange { background: linear-gradient(135deg, #f97316, #fb923c); }
+
+/* Disabled cards */
+.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
